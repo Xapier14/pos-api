@@ -17,7 +17,16 @@ class DatabaseService {
 
     // else, create a new instance
     const uri = mongoUri ?? Config.MongoDbUri ?? "";
-    connect(uri).then(onConnect).catch(onFail);
+    console.log("[DatabaseService] Connecting to DB...");
+    connect(uri)
+      .then(() => {
+        console.log("[DatabaseService] Connected to DB!");
+        onConnect?.();
+      })
+      .catch(() => {
+        console.log("[DatabaseService] Error connecting to DB!");
+        onFail?.();
+      });
     DatabaseService.instance = this;
     return this;
   }
