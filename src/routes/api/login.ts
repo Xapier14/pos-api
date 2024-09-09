@@ -13,7 +13,7 @@ router.post("/", async (req: Request, res: Response) => {
   const account = await Auth.checkCredentials(username, password);
 
   // if no account matches username + password:
-  if (account !== null) {
+  if (account === null) {
     const errorResponse: ILoginErrorResponse = {
       message: "Authentication Fail.",
     };

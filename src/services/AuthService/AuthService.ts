@@ -4,7 +4,7 @@ import { AccountModel, SessionModel } from "models";
 import { DatabaseService } from "services/DatabaseService";
 import { Database } from "services";
 import { IAccount, ISession } from "types";
-import { compareSync } from "bcrypt";
+import { compareSync, hash } from "bcrypt";
 import { randomBytes } from "crypto";
 
 class AuthService {
@@ -58,6 +58,24 @@ class AuthService {
   async verifyToken(token: string): Promise<boolean> {
     const session = await Database.getDocumentByQuery({ token }, SessionModel);
     return session !== null;
+  }
+
+  async createAccount(
+    username: string,
+    password: string,
+    fullName: string
+  ): Promise<IAccount> {
+    const hashStr = await hash(password, 10);
+    const account = await Database.createDocument(
+      {
+        username,
+        password: hashStr,
+        fullName,
+      },
+      AccountModel
+    );
+
+    return account;
   }
 }
 
